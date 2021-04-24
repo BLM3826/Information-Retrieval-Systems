@@ -60,8 +60,8 @@ public class IndexerDemo {
             IndexWriter indexWriter = new IndexWriter(dir, iwc);
             
             // parse txt document using TXT parser and index it
-            List<MyDoc> docs = TXTParsing.parse(txtfile);
-            for (MyDoc doc : docs){
+            List<Doc> docs = TXTParsing.parse(txtfile);
+            for (Doc doc : docs){
                 indexDoc(indexWriter, doc);
             }
             
@@ -86,7 +86,7 @@ public class IndexerDemo {
      * @param mydoc the document to be indexed
      *
      */
-    private void indexDoc(IndexWriter indexWriter, MyDoc mydoc){
+    private void indexDoc(IndexWriter indexWriter, Doc mydoc){
         
         try {
             

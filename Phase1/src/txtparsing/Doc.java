@@ -1,13 +1,13 @@
 package txtparsing;
 
-public class MyDoc {
+public class Doc {
 
 	private int id;
     private String title;
     private String author;
     private String content;
 
-    public MyDoc(int id, String title, String author, String content) {
+    public Doc(int id, String title, String author, String content) {
     	this.id = id;
         this.title = title;
         this.author = author;
