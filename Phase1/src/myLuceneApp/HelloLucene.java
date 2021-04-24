@@ -41,7 +41,7 @@ public class HelloLucene {
     addDoc(writer, "Managing Gigabytes");
     addDoc(writer, "The Art of Computer Science");
     writer.close();
-
+ 
     // 2. query
     String querystr = args.length > 0 ? args[0] : "lucene";
 
