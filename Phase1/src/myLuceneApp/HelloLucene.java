@@ -1,6 +1,6 @@
 package myLuceneApp;
 
-// tested for lucene 7.7.3 and jdk13
+// tested for lucene 7.7.3 and jdk13 test
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.index.IndexReader;
