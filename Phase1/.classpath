@@ -9,5 +9,8 @@
 	<classpathentry kind="lib" path="C:/Users/Στέλα/Downloads/lab 3 - Lucene - trec_eval/lib/lucene-analyzers-common-7.7.3.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Στέλα/Downloads/lab 3 - Lucene - trec_eval/lib/lucene-core-7.7.3.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Στέλα/Downloads/lab 3 - Lucene - trec_eval/lib/lucene-queryparser-7.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Master/Downloads/AUEB/ΣΑΠ/lib/lucene-analyzers-common-7.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Master/Downloads/AUEB/ΣΑΠ/lib/lucene-core-7.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Master/Downloads/AUEB/ΣΑΠ/lib/lucene-queryparser-7.7.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
