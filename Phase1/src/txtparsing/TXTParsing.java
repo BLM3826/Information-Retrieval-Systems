@@ -3,6 +3,7 @@ package txtparsing;
 import utils.IO;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,6 +29,7 @@ public class TXTParsing {
             		line = reader.nextLine();
             		while(!line.startsWith(".A")) {
             			title += "\n" + line;
+            			line = reader.nextLine();
             		}
             	}
             	if(line.startsWith(".A")){
@@ -39,6 +41,7 @@ public class TXTParsing {
             		line = reader.nextLine();
             		while(!line.startsWith(".X")) {
             			content += " " + line;
+            			line = reader.nextLine();
             		}
             		Doc doc = new Doc(id, title, author, content);
             		parsed_docs.add(doc);
@@ -66,4 +69,36 @@ public class TXTParsing {
         
     }
 
+    public static List<Query> parseQueries(String file){
+    	List<Query> parsed_queries = new ArrayList<Query>();
+    	try {
+        	Scanner reader = new Scanner(new File(file));
+        	String line;
+            while (reader.hasNextLine()) {
+            	line = reader.nextLine();
+            	int id = -1;
+            	String query="";
+//            	List<String> queries = new ArrayList<String>();
+            	if(line.startsWith(".I")) {
+            		id = Integer.parseInt(line.substring(3));
+            	}
+            	line = reader.nextLine();
+            	if(line.startsWith(".W")) {
+            		query = reader.nextLine();
+//            		queries.add(query);
+            		line = reader.nextLine();
+            		while(!line.startsWith(".I")) {
+            			query += "\n" + line;
+//            			queries.add(line);
+            		}
+            		Query q = new Query(id, query);
+            		parsed_queries.add(q);
+            	}
+            }
+            return parsed_queries;
+    	}catch(FileNotFoundException e) {
+    		e.printStackTrace();
+    		return null;
+    	}
+    }
 }
