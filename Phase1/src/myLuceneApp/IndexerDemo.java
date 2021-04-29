@@ -94,15 +94,18 @@ public class IndexerDemo {
             Document doc = new Document();
             
             // create the fields of the document and add them to the document
+            
+            StoredField id = new StoredField("id", mydoc.getId());
+            doc.add(id);
             StoredField title = new StoredField("title", mydoc.getTitle());
             doc.add(title);
-            StoredField caption = new StoredField("caption", mydoc.getCaption());
-            doc.add(caption);
-            StoredField mesh = new StoredField("mesh", mydoc.getMesh());
-            doc.add(mesh);
-            String fullSearchableText = mydoc.getTitle() + " " + mydoc.getCaption() + " " + mydoc.getMesh();            
-            TextField contents = new TextField("contents", fullSearchableText, Field.Store.NO);
-            doc.add(contents);
+            StoredField author = new StoredField("author", mydoc.getAuthor());
+            doc.add(author);
+            StoredField content = new StoredField("content", mydoc.getContent());
+            doc.add(content);
+            String fullSearchableText = mydoc.getId() + " " + mydoc.getTitle() + " " + mydoc.getAuthor() + " " + mydoc.getContent();            
+//            TextField contents = new TextField("contents", fullSearchableText, Field.Store.NO);
+//            doc.add(contents);
             
             if (indexWriter.getConfig().getOpenMode() == OpenMode.CREATE) {
                 // New index, so we just add the document (no old document can be there):
