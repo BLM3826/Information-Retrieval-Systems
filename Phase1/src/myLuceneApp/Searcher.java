@@ -78,6 +78,8 @@ public class Searcher {
             
             // create a query parser on the field "contents"
             QueryParser parser = new QueryParser(field, analyzer);
+            parser.setAllowLeadingWildcard(true);
+            System.out.println(parser.getAllowLeadingWildcard());
             
             Query query = parser.parse(question);
             System.out.println("Searching for: " + query.toString(field));
