@@ -18,15 +18,11 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.store.FSDirectory;
 
-/**
- *
- * @author Tonia Kyriakopoulou
- */
-public class SearcherDemo {
+public class Searcher {
     
-    public SearcherDemo(){
+    public Searcher(){
         try{
-            String indexLocation = ("index"); //define where the index is stored
+            String indexLocation = ("index"); //define where the index is stored (from IndexerDemo!!!)
             String field = "contents"; //define which field will be searched            
             
             //Access the index using indexReaderFSDirectory.open(Paths.get(index))
@@ -90,6 +86,6 @@ public class SearcherDemo {
      * Initialize a SearcherDemo
      */
     public static void main(String[] args){
-        SearcherDemo searcherDemo = new SearcherDemo();
+        Searcher searcherDemo = new Searcher();
     }
 }
