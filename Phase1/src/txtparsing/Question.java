@@ -5,6 +5,7 @@ import java.util.*;
 public class Question {
 	private int id;
 	private String query;
+//	private String author, title, before;
 	private List<String> queries;
 	
 	public Question(int id, String query) {

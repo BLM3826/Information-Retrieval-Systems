@@ -70,31 +70,39 @@ public class TXTParsing {
     }
 
     public static List<Question> parseQueries(String file){
+    	System.out.println("Parsing Queries...");
     	List<Question> question = new ArrayList<Question>();
     	try {
         	Scanner reader = new Scanner(new File(file));
-        	String line;
+        	String line = reader.nextLine();
             while (reader.hasNextLine()) {
-            	line = reader.nextLine();
             	int id = -1;
             	String query="";
 //            	List<String> queries = new ArrayList<String>();
+            	
             	if(line.startsWith(".I")) {
             		id = Integer.parseInt(line.substring(3));
-            	}
-            	line = reader.nextLine();
-            	if(line.startsWith(".W")) {
-            		query = reader.nextLine();
-//            		queries.add(query);
             		line = reader.nextLine();
-            		while(!line.startsWith(".I")) {
+                	
+                	while(!line.startsWith(".W")) {
+                		line = reader.nextLine();
+                	}
+	            	query = reader.nextLine();
+//            		queries.add(query);
+            		while(!line.startsWith(".I") && !line.startsWith(".B")) {
             			query += "\n" + line;
 //            			queries.add(line);
+            			line = reader.nextLine();
             		}
             		Question q = new Question(id, query);
             		question.add(q);
-            	}
-            }
+	            	
+            	}else {
+            		line = reader.nextLine();
+            	}//endif
+            	
+            }//endwhile
+            System.out.println("Finished Parsing!");
             return question;
     	}catch(FileNotFoundException e) {
     		e.printStackTrace();
