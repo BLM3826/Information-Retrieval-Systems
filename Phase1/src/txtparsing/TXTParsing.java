@@ -69,8 +69,8 @@ public class TXTParsing {
         
     }
 
-    public static List<Query> parseQueries(String file){
-    	List<Query> parsed_queries = new ArrayList<Query>();
+    public static List<Question> parseQueries(String file){
+    	List<Question> question = new ArrayList<Question>();
     	try {
         	Scanner reader = new Scanner(new File(file));
         	String line;
@@ -91,11 +91,11 @@ public class TXTParsing {
             			query += "\n" + line;
 //            			queries.add(line);
             		}
-            		Query q = new Query(id, query);
-            		parsed_queries.add(q);
+            		Question q = new Question(id, query);
+            		question.add(q);
             	}
             }
-            return parsed_queries;
+            return question;
     	}catch(FileNotFoundException e) {
     		e.printStackTrace();
     		return null;

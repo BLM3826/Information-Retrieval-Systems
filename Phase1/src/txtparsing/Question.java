@@ -2,18 +2,18 @@ package txtparsing;
 
 import java.util.*;
 
-public class Query {
+public class Question {
 	private int id;
 	private String query;
 	private List<String> queries;
 	
-	public Query(int id, String query) {
+	public Question(int id, String query) {
 		super();
 		this.id = id;
 		this.query = query;
 	}
 	
-	public Query(int id, List<String> queries) {
+	public Question(int id, List<String> queries) {
 		super();
 		this.id = id;
 		this.queries = queries;
