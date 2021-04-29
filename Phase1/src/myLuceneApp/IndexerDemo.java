@@ -36,7 +36,7 @@ public class IndexerDemo {
      */
     public IndexerDemo() throws Exception{
         
-        String txtfile =  "docs//mydocs.txt"; //txt file to be parsed and indexed, it contains one document per line
+        String txtfile =  "docs/CISI.ALL";
         String indexLocation = ("index"); //define were to store the index        
         
         Date start = new Date();
