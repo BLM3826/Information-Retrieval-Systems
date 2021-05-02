@@ -20,33 +20,57 @@ public class TXTParsing {
             	line = reader.nextLine();
             	int id = -1;
             	String title="", author="", content="";
+            	
+            	//Find id
             	if(line.startsWith(".I")) {
             		id = Integer.parseInt(line.substring(3));
-            	}
-            	line = reader.nextLine();
-            	if(line.startsWith(".T")){
-            		title = reader.nextLine();
+//            		System.out.println("id "+id);
+            		
+            		//Find title
             		line = reader.nextLine();
-            		while(!line.startsWith(".A")) {
-            			title += "\n" + line;
-            			line = reader.nextLine();
-            		}
-            	}
-            	if(line.startsWith(".A")){
-            		author = reader.nextLine();
-            	}
-            	line = reader.nextLine();
-            	if(line.startsWith(".W")) {
-            		content = reader.nextLine();
+            		if(line.startsWith(".T")){
+                		title = reader.nextLine();
+                		line = reader.nextLine();
+                		//read until you find author
+                		while(!line.startsWith(".A")) {
+                			title += "\n" + line;
+                			line = reader.nextLine();
+//                			System.out.println("title "+line);
+                		}
+                	}
+            		
+            		//Find author
+            		if(line.startsWith(".A")){
+                		author = reader.nextLine();
+//                		System.out.println("author "+author);
+                	}
+            		
+            		//Read until you find content
             		line = reader.nextLine();
-            		while(!line.startsWith(".X")) {
-            			content += " " + line;
-            			line = reader.nextLine();
-            		}
-            		Doc doc = new Doc(id, title, author, content);
-            		parsed_docs.add(doc);
-            	}
-            }
+//                	System.out.println("line "+line);
+                	while(!line.startsWith(".W")) {
+                		line = reader.nextLine();
+//                		System.out.println("line "+line);
+                	}
+                	
+                	//Find content
+                	if(line.startsWith(".W")) {
+                		content = reader.nextLine();
+                		line = reader.nextLine();
+                		//Read until you find .X
+                		while(!line.startsWith(".X")) {
+                			content += " " + line;
+                			line = reader.nextLine();
+//                			System.out.println("content "+content);
+                		}
+                		//Add new doc
+                		Doc doc = new Doc(id, title, author, content);
+                		parsed_docs.add(doc);
+//                		System.out.println("Added doc "+id);
+                	}
+            	}//endif id
+
+            }//endwhile
         	
         	
 //            String txt_file = IO.ReadEntireFileIntoAString(file);

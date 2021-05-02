@@ -3,6 +3,7 @@ package myLuceneApp;
 // tested for lucene 7.7.2 and jdk13
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.Field;
@@ -11,6 +12,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -22,11 +24,7 @@ import java.util.List;
 
 import txtparsing.*;
 
-/**
- * Creates a lucene's inverted index from an xml file.
- * 
- * @author Tonia Kyriakopoulou
- */
+
 public class IndexerDemo {
     
     /**
@@ -45,9 +43,9 @@ public class IndexerDemo {
             
             Directory dir = FSDirectory.open(Paths.get(indexLocation));
             // define which analyzer to use for the normalization of documents
-            Analyzer analyzer = new EnglishAnalyzer();
+            Analyzer analyzer = new StandardAnalyzer();
             // define retrieval model 
-            Similarity similarity = new BM25Similarity();
+            Similarity similarity = new ClassicSimilarity();
             // configure IndexWriter
             IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
             iwc.setSimilarity(similarity);
