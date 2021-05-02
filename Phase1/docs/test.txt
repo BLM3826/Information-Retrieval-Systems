@@ -1,0 +1,9 @@
+.I 1
+.T
+18 Editions of the Dewey Decimal Classifications
+.A
+Comaromi, J.P.
+.W
+   The present study is a history of the DEWEY Decimal
+Classification.
+.X

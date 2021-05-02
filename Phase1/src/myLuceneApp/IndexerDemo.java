@@ -2,6 +2,7 @@ package myLuceneApp;
 
 // tested for lucene 7.7.2 and jdk13
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -93,13 +94,13 @@ public class IndexerDemo {
             
             // create the fields of the document and add them to the document
             
-            StoredField id = new StoredField("id", mydoc.getId());
+            TextField id = new TextField("id", mydoc.getId()+"", Field.Store.YES);
             doc.add(id);
-            StoredField title = new StoredField("title", mydoc.getTitle());
+            TextField title = new TextField("title", mydoc.getTitle(), Field.Store.YES);
             doc.add(title);
-            StoredField author = new StoredField("author", mydoc.getAuthor());
+            TextField author = new TextField("author", mydoc.getAuthor(), Field.Store.YES);
             doc.add(author);
-            StoredField content = new StoredField("content", mydoc.getContent());
+            TextField content = new TextField("content", mydoc.getContent(), Field.Store.YES);
             doc.add(content);
             String fullSearchableText = mydoc.getId() + " " + mydoc.getTitle() + " " + mydoc.getAuthor() + " " + mydoc.getContent();            
 //            TextField contents = new TextField("contents", fullSearchableText, Field.Store.NO);
