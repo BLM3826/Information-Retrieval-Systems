@@ -35,7 +35,7 @@ public class Searcher {
 		try {
 			String indexLocation = ("index"); // define where the index is stored (from IndexerDemo!!!)
 			String queriesName = "docs/CISI.QRY";
-			String resultsName = "docs/resultsCISI_st.txt";
+			String resultsName = "docs/resultsCISI_en.txt";
 			String field = "content"; // define which field will be searched
 
 			// Access the index using indexReaderFSDirectory.open(Paths.get(index))
@@ -77,7 +77,7 @@ public class Searcher {
 	private ScoreDoc[] search(IndexSearcher indexSearcher, String field, String question) {
 		try {
 			// define which analyzer to use for the normalization of user's query
-			Analyzer analyzer = new StandardAnalyzer();
+			Analyzer analyzer = new EnglishAnalyzer();
 
 			// create a query parser on the field "contents"
 			QueryParser parser = new QueryParser(field, analyzer);

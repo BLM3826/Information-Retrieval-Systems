@@ -44,7 +44,7 @@ public class IndexerDemo {
             
             Directory dir = FSDirectory.open(Paths.get(indexLocation));
             // define which analyzer to use for the normalization of documents
-            Analyzer analyzer = new StandardAnalyzer();
+            Analyzer analyzer = new EnglishAnalyzer();
             // define retrieval model 
             Similarity similarity = new ClassicSimilarity();
             // configure IndexWriter
