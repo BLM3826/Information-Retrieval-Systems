@@ -1,7 +1,5 @@
 package myLuceneApp;
 
-// tested for lucene 7.7.2 and jdk13
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -11,13 +9,10 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.FSDirectory;
 
-/**
- *
- * @author Tonia Kyriakopoulou
- */
-public class ReaderDemo {
+
+public class Reader {
     
-    public ReaderDemo(){
+    public Reader(){
         try{
 
             String indexLocation = ("index"); //define where the index is stored            
@@ -56,9 +51,9 @@ public class ReaderDemo {
     }
 
     /**
-     * Initialize a ReaderDemo
+     * Initialize a Reader
      */    
     public static void main(String[] args){
-        ReaderDemo readerDemo = new ReaderDemo();
+        Reader reader = new Reader();
     }
 }

@@ -26,14 +26,14 @@ import java.util.List;
 import txtparsing.*;
 
 
-public class IndexerDemo {
+public class Indexer {
     
     /**
      * Configures IndexWriter.
      * Creates a lucene's inverted index.
      *
      */
-    public IndexerDemo() throws Exception{
+    public Indexer() throws Exception{
         
         String txtfile =  "docs/CISI.ALL";
         String indexLocation = ("index"); //define were to store the index        
@@ -102,9 +102,7 @@ public class IndexerDemo {
             doc.add(author);
             TextField content = new TextField("content", mydoc.getContent(), Field.Store.YES);
             doc.add(content);
-            String fullSearchableText = mydoc.getId() + " " + mydoc.getTitle() + " " + mydoc.getAuthor() + " " + mydoc.getContent();            
-//            TextField contents = new TextField("contents", fullSearchableText, Field.Store.NO);
-//            doc.add(contents);
+
             
             if (indexWriter.getConfig().getOpenMode() == OpenMode.CREATE) {
                 // New index, so we just add the document (no old document can be there):
@@ -122,7 +120,7 @@ public class IndexerDemo {
      */
     public static void main(String[] args) {
         try {
-            IndexerDemo indexerDemo = new IndexerDemo();
+            Indexer indexer = new Indexer();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

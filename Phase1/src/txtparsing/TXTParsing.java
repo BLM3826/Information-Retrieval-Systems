@@ -1,7 +1,5 @@
 package txtparsing;
 
-import utils.IO;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -24,7 +22,6 @@ public class TXTParsing {
             	//Find id
             	if(line.startsWith(".I")) {
             		id = Integer.parseInt(line.substring(3));
-//            		System.out.println("id "+id);
             		
             		//Find title
             		line = reader.nextLine();
@@ -35,22 +32,18 @@ public class TXTParsing {
                 		while(!line.startsWith(".A")) {
                 			title += "\n" + line;
                 			line = reader.nextLine();
-//                			System.out.println("title "+line);
                 		}
                 	}
             		
             		//Find author
             		if(line.startsWith(".A")){
                 		author = reader.nextLine();
-//                		System.out.println("author "+author);
                 	}
             		
             		//Read until you find content
             		line = reader.nextLine();
-//                	System.out.println("line "+line);
                 	while(!line.startsWith(".W")) {
                 		line = reader.nextLine();
-//                		System.out.println("line "+line);
                 	}
                 	
                 	//Find content
@@ -61,30 +54,15 @@ public class TXTParsing {
                 		while(!line.startsWith(".X")) {
                 			content += " " + line;
                 			line = reader.nextLine();
-//                			System.out.println("content "+content);
                 		}
                 		//Add new doc
                 		Doc doc = new Doc(id, title, author, content);
                 		parsed_docs.add(doc);
-//                		System.out.println("Added doc "+id);
                 	}
             	}//endif id
 
             }//endwhile
-        	
-        	
-//            String txt_file = IO.ReadEntireFileIntoAString(file);
-//            String[] docs = txt_file.split("\n");
-//            System.out.println("Read: "+parsed_docs.length + " docs");
-
-            //Parse each document from the txt file
-//            List<MyDoc> parsed_docs= new ArrayList<MyDoc>();
-//            for (String doc:docs){
-//                String[] adoc = doc.split("/");
-//                MyDoc mydoc = new MyDoc(adoc[0],adoc[1],adoc[2]);
-//                parsed_docs.add(mydoc);
-//            }
-
+      
             return parsed_docs;
         } catch (Throwable err) {
             err.printStackTrace();
@@ -102,7 +80,6 @@ public class TXTParsing {
             while (reader.hasNextLine()) {
             	int id = -1;
             	String query="";
-//            	List<String> queries = new ArrayList<String>();
             	
             	if(line.startsWith(".I")) {
             		id = Integer.parseInt(line.substring(3));
@@ -112,10 +89,8 @@ public class TXTParsing {
                 		line = reader.nextLine();
                 	}
 	            	query = reader.nextLine();
-//            		queries.add(query);
             		while(!line.startsWith(".I") && !line.startsWith(".B")) {
             			query += "\n" + line;
-//            			queries.add(line);
             			line = reader.nextLine();
             		}
             		Question q = new Question(id, query);
