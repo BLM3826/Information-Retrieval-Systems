@@ -1,4 +1,4 @@
-package myLuceneApp;
+package searchEngine;
 
 import java.io.File;
 import java.io.FileWriter;

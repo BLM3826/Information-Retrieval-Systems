@@ -1,4 +1,4 @@
-package myLuceneApp;
+package searchEngine;
 
 // tested for lucene 7.7.2 and jdk13
 import org.apache.lucene.analysis.Analyzer;
