@@ -6,3 +6,4 @@ Phase1/.classpath
 Phase1/bin/myLuceneApp/IndexerDemo.class
 Phase1/bin/myLuceneApp/IndexerDemo.class
 *.classpath
+*.zip
