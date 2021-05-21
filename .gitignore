@@ -5,3 +5,4 @@ Phase1/.classpath
 *.class
 Phase1/bin/myLuceneApp/IndexerDemo.class
 Phase1/bin/myLuceneApp/IndexerDemo.class
+*.classpath
