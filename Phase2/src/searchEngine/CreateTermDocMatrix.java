@@ -24,6 +24,7 @@ import org.apache.lucene.search.similarities.Similarity;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexOptions;
@@ -60,7 +61,23 @@ public class CreateTermDocMatrix {
 			
 			IndexReader reader = DirectoryReader.open(index);
 
-			testSparseFreqDoubleArrayConversion(reader);
+			double[][] termXDoc = getSparseTermXDoc(reader);
+			for(int i=0; i <termXDoc.length;++i) {
+				for (int j=0; j< termXDoc[0].length;++j) {
+					System.out.print(termXDoc[i][j]+ " ");
+				}
+				System.out.println(" ");
+			}
+			
+			SVD.computeSVD(termXDoc, 3);
+			
+			double query[] = {0,0,0,0,0,1,0,0}; //Search for Lucene
+			query = SVD.transformQuery(query);
+			
+			double cos_sim[] = SVD.cosineSimilarity(query);
+			for(int i=0; i<cos_sim.length; ++i) {
+				System.out.println("Doc"+i+" = "+cos_sim[i]);
+			}
 			
 			// searcher can only be closed when there
 			// is no need to access the documents any more.
@@ -79,7 +96,7 @@ public class CreateTermDocMatrix {
 		writer.addDocument(doc);
 	}
  
-	private static void testSparseFreqDoubleArrayConversion(IndexReader reader) throws Exception {
+	private static double[][] getSparseTermXDoc(IndexReader reader) throws Exception {
 		Terms fieldTerms = MultiFields.getTerms(reader, "title");   //the number of terms in the lexicon after analysis of the Field "title"
 		System.out.println("Terms:" + fieldTerms.size());
 		
@@ -90,12 +107,20 @@ public class CreateTermDocMatrix {
 		System.out.println();
 		System.out.println();
 		if (fieldTerms != null && fieldTerms.size() != -1) {
+			ArrayList<double[]> tempList = new ArrayList<double[]>();
+			
 			IndexSearcher indexSearcher = new IndexSearcher(reader);
 			for (ScoreDoc scoreDoc : indexSearcher.search(new MatchAllDocsQuery(), Integer.MAX_VALUE).scoreDocs) {   //retrieves all documents
 				System.out.println("DocID: " + scoreDoc.doc);
 				Terms docTerms = reader.getTermVector(scoreDoc.doc, "title");
 				
 				Double[] vector = DocToDoubleVectorUtils.toSparseLocalFreqDoubleArray(docTerms, fieldTerms); //creates document's vector
+				//Double sad
+				double v[] = new double[vector.length];
+				for(int i=0; i<vector.length; ++i) {
+					v[i] = vector[i];
+				}
+				tempList.add(v);
 				
 				NumberFormat nf = new DecimalFormat("0.#");
 				for(int i = 0; i<=vector.length-1; i++ ) {
@@ -104,7 +129,12 @@ public class CreateTermDocMatrix {
 				System.out.println();
 				System.out.println();
 			}
+			
+			double termXDoc[][] = new double[tempList.size()][];
+			termXDoc = tempList.toArray(termXDoc);
+			return termXDoc;
 		}
+		return null;
 	}  
 
 }
