@@ -17,7 +17,7 @@ public class SVD {
 	public static Matrix A;
 	public static Matrix Ak;
 
-	public static void computeSVD(double[][] array, int k) {
+	public static void computeSVD(double[][] array, int[] k_array) {
 
 		int rows = array.length;
 		int columns = array[0].length;
@@ -54,20 +54,22 @@ public class SVD {
 		// S = S[:k,:k]
 		// V = V[:k,:]
 		
-		Uk = U.getMatrix(0, getRows(U) - 1, 0, k-1); // U[:,:k]
-		Sk = S.getMatrix(0, k-1, 0, k-1); // S[:k,:k]
-		Vk = V.getMatrix(0, k-1, 0, getColumns(V) - 1); // V[:k,:]
+		for(int k : k_array) {
+			Uk = U.getMatrix(0, getRows(U) - 1, 0, k-1); // U[:,:k]
+			Sk = S.getMatrix(0, k-1, 0, k-1); // S[:k,:k]
+			Vk = V.getMatrix(0, k-1, 0, getColumns(V) - 1); // V[:k,:]
 
-		Ak = U.times(S).times(V);
+			saveMatrix(Vk, "index/V"+k+".txt");
+			saveMatrix(Uk, "index/U"+k+".txt");
+			saveMatrix(Sk, "index/S"+k+".txt");
+		}
+//		Ak = U.times(S).times(V);
 //		System.out.print("Ak = ");
 //		Ak.print(getColumns(Ak)-1, 6);
 
 //		System.out.print("V"+k+" = ");
 //		Vk.print(getRows(Vk)-1, getColumns(Vk)-1);
 
-		saveMatrix(Vk, "index/Vk.txt");
-		saveMatrix(Uk, "index/Uk.txt");
-		saveMatrix(Sk, "index/Sk.txt");
 	}
 	
 	public static double[] transformQuery(double[] querySparse) {

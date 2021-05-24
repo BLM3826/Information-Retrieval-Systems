@@ -90,7 +90,8 @@ public class CreateTermDocMatrix {
 //				System.out.println(" ");
 //			}
 
-			SVD.computeSVD(termXDoc, 4);
+			int[] k = {50,100,150,300};
+			SVD.computeSVD(termXDoc, k);
 
 			//--------------------FOR SEARCHER-------------------
 //			double query[] = {0,0,0,0,0,1,0,0}; //Search for Lucene

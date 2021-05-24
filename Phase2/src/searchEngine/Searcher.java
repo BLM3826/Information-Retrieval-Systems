@@ -48,30 +48,34 @@ public class Searcher {
 				++pos;
 			}
 			
-			//Reload SVD from files
-			SVD.reloadVk("index/Vk.txt");
-			SVD.reloadUk("index/Uk.txt");
-			SVD.reloadSk("index/Sk.txt");
-
-			List<Question> questions = TXTParsing.parseQueries(queriesName);
-			System.out.println("Questions: " + questions.size());
-			int[] numOfDocs = { 20, 30, 50 };
-			
-			for (int i = 0; i < numOfDocs.length; i++) {
-				int j = numOfDocs[i];
-				File resultsFile = new File(resultsName + j + ".txt");
-				resultsFile.createNewFile();
-				FileWriter writer = new FileWriter(resultsFile);
+			int[] ranks = {50,100,150,300};
+			for(int rank : ranks) {
 				
-				for (Question q : questions) {
-					// Find documents with the most similarity
-					List<DocSimilarity> results = search(q.getQuery(), j);
-					for (DocSimilarity hit : results) {
-						writer.write(q.getId() + " Q0 " + hit.getId() + " 0 " + hit.getSimilarity() + " STANDARD\n");
-						System.out.print(q.getId() + " Q0 " + hit.getId() + " 0 " + hit.getSimilarity() + " STANDARD\n");
+				//Reload SVD from files
+				SVD.reloadVk("index/V"+rank+".txt");
+				SVD.reloadUk("index/U"+rank+".txt");
+				SVD.reloadSk("index/S"+rank+".txt");
+	
+				List<Question> questions = TXTParsing.parseQueries(queriesName);
+				System.out.println("Questions: " + questions.size());
+				int[] numOfDocs = { 20, 30, 50 };
+				
+				for (int i = 0; i < numOfDocs.length; i++) {
+					int j = numOfDocs[i];
+					File resultsFile = new File(resultsName + "rank" + rank + "_" + j + ".txt");
+					resultsFile.createNewFile();
+					FileWriter writer = new FileWriter(resultsFile);
+					
+					for (Question q : questions) {
+						// Find documents with the most similarity
+						List<DocSimilarity> results = search(q.getQuery(), j);
+						for (DocSimilarity hit : results) {
+							writer.write(q.getId() + " Q0 " + hit.getId() + " 0 " + hit.getSimilarity() + " STANDARD\n");
+							System.out.print(q.getId() + " Q0 " + hit.getId() + " 0 " + hit.getSimilarity() + " STANDARD\n");
+						}
 					}
+					writer.close();
 				}
-				writer.close();
 			}
 
 			// Close indexReader
