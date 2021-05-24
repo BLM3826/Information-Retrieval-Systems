@@ -48,10 +48,10 @@ public class Searcher {
 				++pos;
 			}
 			
-			//Reload Vk from file
-			SVD.reloadMatrix(SVD.Vk, "index/Vk.txt");
-			SVD.reloadMatrix(SVD.Uk, "index/Uk.txt");
-			SVD.reloadMatrix(SVD.Sk, "index/Sk.txt");
+			//Reload SVD from files
+			SVD.reloadVk("index/Vk.txt");
+			SVD.reloadUk("index/Uk.txt");
+			SVD.reloadSk("index/Sk.txt");
 
 			List<Question> questions = TXTParsing.parseQueries(queriesName);
 			System.out.println("Questions: " + questions.size());
@@ -98,7 +98,6 @@ public class Searcher {
 			CharTermAttribute attr = stream.addAttribute(CharTermAttribute.class);
 			stream.reset();
 			while (stream.incrementToken()) {
-				System.out.println(attr.toString());
 				if (terms.containsKey(attr.toString())){
 					int pos = terms.get(attr.toString()); //Get position of token in terms
 					++queryVector[pos]; //Increment frequency of token					

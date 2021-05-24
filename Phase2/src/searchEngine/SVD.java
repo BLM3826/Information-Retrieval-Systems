@@ -72,7 +72,6 @@ public class SVD {
 	
 	public static double[] transformQuery(double[] querySparse) {
 		Matrix q = new Matrix(querySparse, 1); //Create 1-d Matrix
-		
 		return (q.times(Uk).times(Sk)).getArray()[0];
 	}
 	
@@ -109,7 +108,19 @@ public class SVD {
 		}
 	}
 	
-	public static void reloadMatrix(Matrix matrix, String file) {
+	public static void reloadVk(String file) {
+		Vk = reloadMatrix(file);
+	}
+	
+	public static void reloadUk(String file) {
+		Uk = reloadMatrix(file);
+	}
+
+	public static void reloadSk(String file) {
+		Sk = reloadMatrix(file);
+	}
+	
+	private static Matrix reloadMatrix(String file) {
 		File VkArrayFile = new File(file);
 		try {
 			 Scanner reader = new Scanner(VkArrayFile);
@@ -129,10 +140,11 @@ public class SVD {
 		      
 		      double[][] VkArray = new double[temp.size()][row.length];
 		      temp.toArray(VkArray);
-		      matrix = new Matrix(VkArray);
+		      return new Matrix(VkArray);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 	}
 	
