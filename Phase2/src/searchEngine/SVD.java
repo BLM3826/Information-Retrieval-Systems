@@ -1,5 +1,9 @@
 package searchEngine;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import Jama.*;
 
 public class SVD {
@@ -56,6 +60,22 @@ public class SVD {
 
 //		System.out.print("V"+k+" = ");
 //		Vk.print(getRows(Vk)-1, getColumns(Vk)-1);
+		
+		File VkArrayFile = new File("../index/Vk.txt");
+		try {
+			VkArrayFile.createNewFile();
+			FileWriter writer = new FileWriter(VkArrayFile);
+			for (int i = 0; i < getRows(Vk); i++) {
+				for (int j = 0; j < getColumns(Vk); j++) {
+					writer.write(Vk.get(i,j) + " ");
+				}
+					writer.write("\n");
+			}
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static double[] transformQuery(double[] querySparse) {
