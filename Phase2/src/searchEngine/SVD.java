@@ -14,9 +14,9 @@ public class SVD {
 		int rows = array.length;
 		int columns = array[0].length;
 		System.out.println("Size ("+rows+","+columns+")");
-		A = new Matrix(array).transpose();
-		Matrix B = Matrix.random(rows, 3);
-		A = A.times(B).times(B.transpose());
+		A = new Matrix(array).transpose(); //Columns are Docs
+//		Matrix B = Matrix.random(rows, 3);
+//		A = A.times(B).times(B.transpose());
 		System.out.print("A = ");
 		A.print(columns-1, 6);
 

@@ -69,10 +69,15 @@ public class CreateTermDocMatrix {
 				System.out.println(" ");
 			}
 			
-			SVD.computeSVD(termXDoc, 3);
+			SVD.computeSVD(termXDoc, 4);
 			
 			double query[] = {0,0,0,0,0,1,0,0}; //Search for Lucene
+//			double query[] = {0,0,1,0,1,0,0,1}; 
 			query = SVD.transformQuery(query);
+			for(double q : query) {
+				System.out.print(q+" ");
+			}
+			System.out.println("\n");
 			
 			double cos_sim[] = SVD.cosineSimilarity(query);
 			for(int i=0; i<cos_sim.length; ++i) {
