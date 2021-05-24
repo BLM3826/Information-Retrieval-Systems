@@ -17,30 +17,30 @@ public class SVD {
 		A = new Matrix(array).transpose(); //Columns are Docs
 //		Matrix B = Matrix.random(rows, 3);
 //		A = A.times(B).times(B.transpose());
-		System.out.print("A = ");
-		A.print(columns-1, 6);
+//		System.out.print("A = ");
+//		A.print(columns-1, 1);
 
 		// compute the singular value decomposition (SVD)
-		System.out.println("A = U S V^T");
-		System.out.println();
+//		System.out.println("A = U S V^T");
+//		System.out.println();
 		SingularValueDecomposition s = A.svd();
-		System.out.print("U = ");
+//		System.out.print("U = ");
 		Matrix U = s.getU();
-		U.print(getColumns(U)-1, 6);
-		System.out.print("Sigma = ");
+//		U.print(getColumns(U)-1, 6);
+//		System.out.print("Sigma = ");
 		Matrix S = s.getS();
-		S.print(getColumns(S)-1, 6);
-		System.out.print("V = ");
+//		S.print(getColumns(S)-1, 6);
+//		System.out.print("V = ");
 		Matrix V = s.getV();
-		V.print(getColumns(V)-1, 6);
+//		V.print(getColumns(V)-1, 6);
 		System.out.println("rank = " + s.rank());
 		System.out.println("condition number = " + s.cond());
 		System.out.println("2-norm = " + s.norm2());
 
 		// print out singular values
-		System.out.print("singular values = ");
-		Matrix svalues = new Matrix(s.getSingularValues(), 1);
-		svalues.print(9, 6);
+//		System.out.print("singular values = ");
+//		Matrix svalues = new Matrix(s.getSingularValues(), 1);
+//		svalues.print(9, 6);
 
 		// U = U[:,:k]
 		// S = S[:k,:k]
@@ -51,11 +51,11 @@ public class SVD {
 		Vk = V.getMatrix(0, k-1, 0, getColumns(V) - 1); // V[:k,:]
 
 		Ak = U.times(S).times(V);
-		System.out.print("Ak = ");
-		Ak.print(getColumns(Ak)-1, 6);
+//		System.out.print("Ak = ");
+//		Ak.print(getColumns(Ak)-1, 6);
 
-		System.out.print("V"+k+" = ");
-		Vk.print(getRows(Vk)-1, getColumns(Vk)-1);
+//		System.out.print("V"+k+" = ");
+//		Vk.print(getRows(Vk)-1, getColumns(Vk)-1);
 	}
 	
 	public static double[] transformQuery(double[] querySparse) {
