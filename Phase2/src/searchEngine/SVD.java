@@ -3,6 +3,9 @@ package searchEngine;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import Jama.*;
 import txtparsing.DocSimilarity;
@@ -61,26 +64,15 @@ public class SVD {
 
 //		System.out.print("V"+k+" = ");
 //		Vk.print(getRows(Vk)-1, getColumns(Vk)-1);
-		
-		File VkArrayFile = new File("index/Vk.txt");
-		try {
-			VkArrayFile.createNewFile();
-			FileWriter writer = new FileWriter(VkArrayFile);
-			for (int i = 0; i < getRows(Vk); i++) {
-				for (int j = 0; j < getColumns(Vk); j++) {
-					writer.write(Vk.get(i,j) + " ");
-				}
-					writer.write("\n");
-			}
-			writer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		saveMatrix(Vk, "index/Vk.txt");
+		saveMatrix(Uk, "index/Uk.txt");
+		saveMatrix(Sk, "index/Sk.txt");
 	}
 	
 	public static double[] transformQuery(double[] querySparse) {
 		Matrix q = new Matrix(querySparse, 1); //Create 1-d Matrix
+		
 		return (q.times(Uk).times(Sk)).getArray()[0];
 	}
 	
@@ -98,6 +90,50 @@ public class SVD {
 			similarity[i] = new DocSimilarity(i, dotProduct/euclDist);
 		}
 		return similarity;
+	}
+	
+	public static void saveMatrix(Matrix matrix, String file) {
+		File VkArrayFile = new File(file);
+		try {
+			VkArrayFile.createNewFile();
+			FileWriter writer = new FileWriter(VkArrayFile);
+			for (int i = 0; i < getRows(matrix); i++) {
+				for (int j = 0; j < getColumns(matrix); j++) {
+					writer.write(matrix.get(i,j) + " ");
+				}
+					writer.write("\n");
+			}
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void reloadMatrix(Matrix matrix, String file) {
+		File VkArrayFile = new File(file);
+		try {
+			 Scanner reader = new Scanner(VkArrayFile);
+			 System.out.println("Reload Matrix from "+file+"...");
+			 List<double[]> temp = new ArrayList<double[]>();
+			 String[] row = null;
+		      while (reader.hasNextLine()) {
+		    	//Split row
+		        row = reader.nextLine().split(" ");
+		        double[] nums = new double[row.length]; 
+		        for(int i=0; i<row.length; ++i) { 
+		        	nums[i] = Double.parseDouble(row[i]); //Get doubles
+		        }
+		        temp.add(nums);
+		      }
+		      reader.close();
+		      
+		      double[][] VkArray = new double[temp.size()][row.length];
+		      temp.toArray(VkArray);
+		      matrix = new Matrix(VkArray);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static int getRows(Matrix m) {
