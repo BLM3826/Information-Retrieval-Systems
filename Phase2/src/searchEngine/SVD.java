@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import Jama.*;
+import txtparsing.DocSimilarity;
 
 public class SVD {
 	public static Matrix Uk;
@@ -61,7 +62,7 @@ public class SVD {
 //		System.out.print("V"+k+" = ");
 //		Vk.print(getRows(Vk)-1, getColumns(Vk)-1);
 		
-		File VkArrayFile = new File("../index/Vk.txt");
+		File VkArrayFile = new File("index/Vk.txt");
 		try {
 			VkArrayFile.createNewFile();
 			FileWriter writer = new FileWriter(VkArrayFile);
@@ -83,17 +84,18 @@ public class SVD {
 		return (q.times(Uk).times(Sk)).getArray()[0];
 	}
 	
-	public static double[] cosineSimilarity(double[] query) {
+	public static DocSimilarity[] cosineSimilarity(double[] query) {
 		Matrix q = new Matrix(query, 1).transpose(); //Create 1-d Matrix
 		int terms = getRows(Vk);
 		int docs = getColumns(Vk);
-		double[] similarity = new double[docs];
+		DocSimilarity[] similarity = new DocSimilarity[docs];
 		for(int i=0; i<docs; ++i) {
 			Matrix doc = Vk.getMatrix(0, terms-1, i, i); //Get column i
 			//Calculate cosine similarity with doc i
 			double dotProduct = q.arrayTimes(doc).norm1();
 			double euclDist = q.normF() * doc.normF();
-			similarity[i] = dotProduct/euclDist;
+//			similarity[i] = dotProduct/euclDist;
+			similarity[i] = new DocSimilarity(i, dotProduct/euclDist);
 		}
 		return similarity;
 	}
