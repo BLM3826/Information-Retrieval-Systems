@@ -1,9 +1,11 @@
 package searchEngine;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.deeplearning4j.models.embeddings.learning.impl.elements.CBOW;
+import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.text.sentenceiterator.BasicLineIterator;
 import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
@@ -17,6 +19,31 @@ public class Embeddings {
 				.elementsLearningAlgorithm(new CBOW<>()).build();
 		
 		embeddings.fit();
+	}
+	
+	public static double[] toDenseAverageVector(String[] terms) {
+		return embeddings.getWordVectorsMean(Arrays.asList(terms)).toDoubleVector();
+	}
+	
+	public static double cosineSimilarity(double[] s1, double[] s2) {
+		double dotProduct = 0.0;
+	    double normA = 0.0;
+	    double normB = 0.0;
+	    for (int i = 0; i < s1.length; i++) { //s1.length = 100
+	        dotProduct += s1[i] * s2[i];
+	        normA += Math.pow(s1[i], 2);
+	        normB += Math.pow(s2[i], 2);
+	    }   
+	    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+		
+	}
+	
+	public static void saveModel(String path) {
+		WordVectorSerializer.writeWord2VecModel(embeddings, path);
+	}
+	
+	public static void loadModel(String path) {
+		embeddings = WordVectorSerializer.readWord2VecModel(path);
 	}
 	
 	public static void main(String[] args) {
