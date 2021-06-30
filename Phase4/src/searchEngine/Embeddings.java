@@ -4,11 +4,9 @@ import java.io.FileNotFoundException;
 import java.util.Collection;
 
 import org.deeplearning4j.models.embeddings.learning.impl.elements.CBOW;
-//import org.deeplearning4j.spark.models.embeddings.word2vec.Word2Vec;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.text.sentenceiterator.BasicLineIterator;
 import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
-import org.deeplearning4j.parallelism.AsyncIterator;
 
 public class Embeddings {
 	public static Word2Vec embeddings;
