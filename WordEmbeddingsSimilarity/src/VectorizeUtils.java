@@ -12,6 +12,8 @@ import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
+import searchEngine.WordEmbeddingsSimilarity;
+
 /**
  * utility class for converting Lucene {@link org.apache.lucene.document.Document}s to <code>Double</code> vectors.
  */

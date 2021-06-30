@@ -1,4 +1,4 @@
-
+package searchEngine;
 
 import java.io.FileNotFoundException;
 import java.util.Collection;
@@ -20,13 +20,13 @@ public class Embeddings {
 	}
 	
 	public static void main(String[] args) {
-		String txtfile =  "../Information-Retrieval-Systems/docs/CISI.ALL";
+		String txtfile =  "../docs/CISI.ALL";
 		SentenceIterator iter;
 		try {
 //			String txtfile =  new ClassPathResource("../docs/CISI.ALL").getFile().getAbsolutePath();
 			iter = new BasicLineIterator(txtfile);
 			createWord2Vec(iter);
-			String[] words = new String[] { "hikking", "Greece","Rome","queen","doctor"};
+			String[] words = new String[] { "literature", "technology","scientists","academic","universities"};
 			for (String w : words) {
 				Collection<String> lst = embeddings.wordsNearest(w,5);
 				System.out.println("5 words closest to "+w+": "+lst);

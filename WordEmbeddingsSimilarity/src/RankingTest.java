@@ -1,6 +1,8 @@
 
 import com.google.common.io.Files;
 
+import searchEngine.WordEmbeddingsSimilarity;
+
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
