@@ -7,3 +7,9 @@ Phase1/bin/myLuceneApp/IndexerDemo.class
 Phase1/bin/myLuceneApp/IndexerDemo.class
 *.classpath
 *.zip
+*.cfe
+*.cfs
+*.si
+*.lock
+WordEmbeddingsSimilarity/index/segments_5
+WordEmbeddingsSimilarity/index/embeddings.txt
