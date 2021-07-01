@@ -10,8 +10,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.index.IndexReader;
@@ -27,8 +29,7 @@ import txtparsing.Question;
 import txtparsing.TXTParsing;
 
 public class Searcher {
-	private Terms fieldTerms;
-	private HashMap<String, Integer> terms;
+	private List<Doc> docs;
 
 	public Searcher() {
 		try {
@@ -39,66 +40,56 @@ public class Searcher {
 
 			// Access the index using indexReaderFSDirectory.open(Paths.get(index))
 			IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexLocation)));
-//			IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-//			indexSearcher.setSimilarity(new ClassicSimilarity());
-			fieldTerms = MultiFields.getTerms(indexReader, "content");
-			System.out.println("Terms:" + fieldTerms.size());
-			terms = new HashMap<String, Integer>();
-			TermsEnum it = fieldTerms.iterator(); // iterates through the terms of the lexicon
-			int pos = 0;
-			while (it.next() != null) {
-//				System.out.println(it.term().utf8ToString() + " "); // prints the terms
-				terms.put(it.term().utf8ToString(), pos);
-				++pos;
-			}
+////			IndexSearcher indexSearcher = new IndexSearcher(indexReader);
+////			indexSearcher.setSimilarity(new ClassicSimilarity());
+//			fieldTerms = MultiFields.getTerms(indexReader, "content");
+//			System.out.println("Terms:" + fieldTerms.size());
+//			terms = new HashMap<String, Integer>();
+//			TermsEnum it = fieldTerms.iterator(); // iterates through the terms of the lexicon
+//			int pos = 0;
+//			while (it.next() != null) {
+////				System.out.println(it.term().utf8ToString() + " "); // prints the terms
+//				terms.put(it.term().utf8ToString(), pos);
+//				++pos;
+//			}
 			
 			
 			//************CHANGES************
+			//Load Embeddings
 			String word2VecPath = "index/embeddings.txt";
 			Embeddings.loadModel(word2VecPath);
-			
-			int[] ranks = {50,100,150,300};
-			for(int rank : ranks) {
 	
-				List<Question> questions = TXTParsing.parseQueries(queriesName);
-				System.out.println("Questions: " + questions.size());
-				int[] numOfDocs = { 20, 30, 50 };
+			//Load Questions
+			List<Question> questions = TXTParsing.parseQueries(queriesName);
+			System.out.println("Questions: " + questions.size());
+			
+			//Load Documents
+			//TODO: get list docs available
+			docs = new ArrayList<>(); //TEMP
+			
+			int[] numOfDocs = { 20, 30, 50 };
+			
+			for (int i = 0; i < numOfDocs.length; i++) {
+				//Find top j Docs
+				int j = numOfDocs[i];
+				File resultsFile = new File(resultsName + j + ".txt");
+				resultsFile.createNewFile();
+				FileWriter writer = new FileWriter(resultsFile);
 				
-				for (int i = 0; i < numOfDocs.length; i++) {
-					int j = numOfDocs[i];
-					File resultsFile = new File(resultsName + "rank" + rank + "_" + j + ".txt");
-					resultsFile.createNewFile();
-					FileWriter writer = new FileWriter(resultsFile);
+				//For every question
+				for (Question q : questions) {
+					String[] terms = analyse(q.getQuery()); //split to tokens
+					double[] query_vector = Embeddings.toDenseAverageVector(terms); //query collective vector
+
+					// Find documents with the most similarity
+					List<DocSimilarity> similarity = search(query_vector, j);
 					
-					
-					for (Question q : questions) {
-						String[] terms = analyse(q.getQuery()); //split to tokens
-						double[] query_vector = Embeddings.toDenseAverageVector(terms); //query collective vector
-						
-						//TODO: get list docs available
-						List<Doc> docs = new ArrayList<>(); //TEMP
-						List<DocSimilarity> similarity = new ArrayList<>(); //for every doc that exists
-						for(Doc doc : docs) {
-							//TODO: get tokens of doc in String[]
-							String[] tokens = new String[0]; //TEMP
-							double[] document_vector = Embeddings.toDenseAverageVector(tokens); //document collective vector
-							DocSimilarity sm = new DocSimilarity(doc.getId(), Embeddings.cosineSimilarity(document_vector, query_vector));
-							similarity.add(sm);
-						}
-						
-						Collections.sort(similarity);
-						similarity = similarity.subList(0, j + 1); //keep only j numberOfDocs
-						
-						
-//						// Find documents with the most similarity
-//						List<DocSimilarity> results = search(q.getQuery(), j);
-						for (DocSimilarity hit : similarity) {
-							writer.write(q.getId() + " Q0 " + hit.getId() + " 0 " + hit.getSimilarity() + " STANDARD\n");
-							System.out.print(q.getId() + " Q0 " + hit.getId() + " 0 " + hit.getSimilarity() + " STANDARD\n");
-						}
+					for (DocSimilarity hit : similarity) {
+						writer.write(q.getId() + " Q0 " + hit.getId() + " 0 " + hit.getSimilarity() + " STANDARD\n");
+						System.out.print(q.getId() + " Q0 " + hit.getId() + " 0 " + hit.getSimilarity() + " STANDARD\n");
 					}
-					writer.close();
 				}
+				writer.close();
 			}
 
 			// Close indexReader
@@ -125,56 +116,27 @@ public class Searcher {
 			e.printStackTrace();
 		}
 		
-		return (String[]) terms.toArray();
+		return terms.toArray(new String[terms.size()]);
+//		return (String[]) terms.toArray();
 	}
 
 	/**
 	 * Searches the index given a specific user query.
 	 */
-	private List<DocSimilarity> search(String question, int k) {
-		try {
-			//Initialise with zeros
-			double[] queryVector = new double[(int)fieldTerms.size()];
-			for(int i=0; i<queryVector.length; ++i) {
-				queryVector[i] = 0;
-			}
-			
-			// define which analyzer to use for the normalization of user's query
-			Analyzer analyzer = new EnglishAnalyzer();
-			TokenStream stream = analyzer.tokenStream(null, question);
-			CharTermAttribute attr = stream.addAttribute(CharTermAttribute.class);
-			stream.reset();
-			while (stream.incrementToken()) {
-				if (terms.containsKey(attr.toString())){
-					int pos = terms.get(attr.toString()); //Get position of token in terms
-					++queryVector[pos]; //Increment frequency of token					
-				}
-			}
-			stream.end();
-			stream.close();
-			
-			queryVector = SVD.transformQuery(queryVector);
-
-			DocSimilarity cos_sim[] = SVD.cosineSimilarity(queryVector);
-			
-			Arrays.sort(cos_sim);
-			//1460
-			return Arrays.asList(cos_sim).subList(0, k + 1);
-
-			// create a query parser on the field "content"
-//			QueryParser parser = new QueryParser(field, analyzer);
-//			parser.setAllowLeadingWildcard(true);
-//
-//			Query query = parser.parse(QueryParser.escape(question));
-//			System.out.println("Searching for: " + query.toString(field));
-//			TopDocs results = indexSearcher.search(query, k);
-
-//			return cos_sim;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+	private List<DocSimilarity> search(double[] query_vector, int k) {
+		List<DocSimilarity> similarity = new ArrayList<>();
+		
+		for(Doc doc : docs) {
+			//Get tokens of doc in String[]
+			String[] tokens = StringUtils.split(doc.getContent()," ");
+			double[] document_vector = Embeddings.toDenseAverageVector(tokens); //document collective vector
+			DocSimilarity sm = new DocSimilarity(doc.getId(), Embeddings.cosineSimilarity(document_vector, query_vector));
+			similarity.add(sm);
 		}
+
+		Collections.sort(similarity);
+		similarity = similarity.subList(0, k + 1); //keep only k numberOfDocs
+		return similarity;
 	}
 
 	/**
