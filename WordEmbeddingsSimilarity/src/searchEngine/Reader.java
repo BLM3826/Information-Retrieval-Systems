@@ -2,6 +2,8 @@ package searchEngine;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -21,7 +23,7 @@ public class Reader {
             IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexLocation))); //IndexReader is an abstract class, providing an interface for accessing an index.
             
             //Retrieve all docs in the index using the indexReader
-            printIndexDocuments(indexReader);
+//            IndexDocumentsList(indexReader);
             
             //Close indexReader
             indexReader.close();
@@ -33,21 +35,25 @@ public class Reader {
     
     /**
      * Retrieves all documents in the index using indexReader
+     * @return 
      */
-    private void printIndexDocuments(IndexReader indexReader){
+    static List<Document> indexDocumentsList(IndexReader indexReader){
+    	List<Document> documents = new ArrayList<Document>();
         try {
             System.out.println("--------------------------");
             System.out.println("Documents in the index...");
             
             for (int i=0; i<indexReader.maxDoc(); i++) {
                 Document doc = indexReader.document(i);
-                System.out.println("\tid="+doc.getField("id")+"\ttitle="+doc.getField("title")+"\tauthor:"+doc.get("author")+"\tcontent:"+doc.get("content"));
+                documents.add(doc);
+//                System.out.println("\tid="+doc.getField("id")+"\ttitle="+doc.getField("title")+"\tauthor:"+doc.get("author")+"\tcontent:"+doc.get("content"));
             }
         } catch (CorruptIndexException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        return documents;
     }
 
     /**
