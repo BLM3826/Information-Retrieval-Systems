@@ -9,6 +9,8 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -64,7 +66,16 @@ public class Indexer {
                 indexDoc(indexWriter, doc);
             }
             
+            indexWriter.commit();
+
+            IndexReader reader = DirectoryReader.open(indexWriter);
+            String fieldName = "content";
+            FieldValuesSentenceIterator fieldValuesSentenceIterator = new FieldValuesSentenceIterator(reader, fieldName);
+
             indexWriter.close();
+            
+            Embeddings.createWord2Vec(fieldValuesSentenceIterator);
+            Embeddings.saveModel("index/embeddings.txt");
             
             Date end = new Date();
             System.out.println(end.getTime() - start.getTime() + " total milliseconds");
