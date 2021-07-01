@@ -16,6 +16,7 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiFields;
 import org.apache.lucene.index.Terms;
@@ -29,7 +30,7 @@ import txtparsing.Question;
 import txtparsing.TXTParsing;
 
 public class Searcher {
-	private List<Doc> docs;
+	private List<Document> docs;
 
 	public Searcher() {
 		try {
@@ -64,8 +65,8 @@ public class Searcher {
 			System.out.println("Questions: " + questions.size());
 			
 			//Load Documents
-			//TODO: get list docs available
-			docs = new ArrayList<>(); //TEMP
+			
+			docs = Reader.indexDocumentsList(indexReader);
 			
 			int[] numOfDocs = { 20, 30, 50 };
 			
@@ -126,11 +127,11 @@ public class Searcher {
 	private List<DocSimilarity> search(double[] query_vector, int k) {
 		List<DocSimilarity> similarity = new ArrayList<>();
 		
-		for(Doc doc : docs) {
+		for(Document doc : docs) {
 			//Get tokens of doc in String[]
-			String[] tokens = StringUtils.split(doc.getContent()," ");
+			String[] tokens = StringUtils.split(doc.getField("content").stringValue()," ");
 			double[] document_vector = Embeddings.toDenseAverageVector(tokens); //document collective vector
-			DocSimilarity sm = new DocSimilarity(doc.getId(), Embeddings.cosineSimilarity(document_vector, query_vector));
+			DocSimilarity sm = new DocSimilarity(Integer.parseInt(doc.getField("id").stringValue()), Embeddings.cosineSimilarity(document_vector, query_vector));
 			similarity.add(sm);
 		}
 
