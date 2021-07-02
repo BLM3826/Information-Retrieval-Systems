@@ -12,3 +12,5 @@ Phase1/bin/myLuceneApp/IndexerDemo.class
 *.si
 *.lock
 WordEmbeddingsSimilarity/index/*
+Phase4/index/embeddings.txt
+Phase4/index/segments_6
