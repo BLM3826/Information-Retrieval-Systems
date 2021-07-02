@@ -1,5 +1,7 @@
 package txtparsing;
 
+import java.util.Comparator;
+
 public class DocSimilarity implements Comparable<DocSimilarity>{
 	private int id;
 	private double similarity;
@@ -27,7 +29,16 @@ public class DocSimilarity implements Comparable<DocSimilarity>{
 	
 	@Override
     public int compareTo(DocSimilarity b) {
-        return (int)(b.getSimilarity() - this.getSimilarity()); //Descending order
+		return Double.compare(b.getSimilarity(), this.getSimilarity()); //Descending order
     }
+	
+	public static class SimilarityComparator implements Comparator<DocSimilarity>{
+
+		@Override
+		public int compare(DocSimilarity a, DocSimilarity b) {
+			return a.compareTo(b);
+		}
+		
+	}
 
 }

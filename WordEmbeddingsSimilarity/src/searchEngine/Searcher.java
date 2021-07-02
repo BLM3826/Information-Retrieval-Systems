@@ -135,8 +135,8 @@ public class Searcher {
 			similarity.add(sm);
 		}
 
-		Collections.sort(similarity);
-		similarity = similarity.subList(0, k + 1); //keep only k numberOfDocs
+		Collections.sort(similarity, new DocSimilarity.SimilarityComparator());
+		similarity = similarity.subList(0, k); //keep only k numberOfDocs
 		return similarity;
 	}
 
