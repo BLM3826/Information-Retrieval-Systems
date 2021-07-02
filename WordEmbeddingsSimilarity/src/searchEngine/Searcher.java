@@ -31,13 +31,13 @@ import txtparsing.TXTParsing;
 
 public class Searcher {
 	private List<Document> docs;
+	String field = "content"; // define which field will be searched
 
 	public Searcher() {
 		try {
 			String indexLocation = ("index"); // define where the index is stored (from IndexerDemo!!!)
 			String queriesName = "../docs/CISI.QRY";
 			String resultsName = "../docs/resultsCISIPhase4_";
-			String field = "content"; // define which field will be searched
 
 			// Access the index using indexReaderFSDirectory.open(Paths.get(index))
 			IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexLocation)));
@@ -129,7 +129,7 @@ public class Searcher {
 		
 		for(Document doc : docs) {
 			//Get tokens of doc in String[]
-			String[] tokens = StringUtils.split(doc.getField("content").stringValue()," ");
+			String[] tokens = StringUtils.split(doc.getField(field).stringValue()," ");
 			double[] document_vector = Embeddings.toDenseAverageVector(tokens); //document collective vector
 			DocSimilarity sm = new DocSimilarity(Integer.parseInt(doc.getField("id").stringValue()), Embeddings.cosineSimilarity(document_vector, query_vector));
 			similarity.add(sm);
