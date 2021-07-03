@@ -58,7 +58,8 @@ public class Searcher {
 			//************CHANGES************
 			//Load Embeddings
 			String word2VecPath = "index/embeddings.txt";
-			Embeddings.loadModel(word2VecPath);
+			String pretrainedModel = "index/pretrained/model.txt";
+			Embeddings.loadModel(pretrainedModel);
 	
 			//Load Questions
 			List<Question> questions = TXTParsing.parseQueries(queriesName);
