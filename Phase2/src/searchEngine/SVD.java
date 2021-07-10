@@ -23,36 +23,15 @@ public class SVD {
 		int columns = array[0].length;
 		System.out.println("Size ("+rows+","+columns+")");
 		A = new Matrix(array).transpose(); //Columns are Docs
-//		Matrix B = Matrix.random(rows, 3);
-//		A = A.times(B).times(B.transpose());
-//		System.out.print("A = ");
-//		A.print(columns-1, 1);
 
 		// compute the singular value decomposition (SVD)
-//		System.out.println("A = U S V^T");
-//		System.out.println();
 		SingularValueDecomposition s = A.svd();
-//		System.out.print("U = ");
 		Matrix U = s.getU();
-//		U.print(getColumns(U)-1, 6);
-//		System.out.print("Sigma = ");
 		Matrix S = s.getS();
-//		S.print(getColumns(S)-1, 6);
-//		System.out.print("V = ");
 		Matrix V = s.getV();
-//		V.print(getColumns(V)-1, 6);
 		System.out.println("rank = " + s.rank());
 		System.out.println("condition number = " + s.cond());
 		System.out.println("2-norm = " + s.norm2());
-
-		// print out singular values
-//		System.out.print("singular values = ");
-//		Matrix svalues = new Matrix(s.getSingularValues(), 1);
-//		svalues.print(9, 6);
-
-		// U = U[:,:k]
-		// S = S[:k,:k]
-		// V = V[:k,:]
 		
 		for(int k : k_array) {
 			Uk = U.getMatrix(0, getRows(U) - 1, 0, k-1); // U[:,:k]
@@ -63,18 +42,12 @@ public class SVD {
 			saveMatrix(Uk, "index/U"+k+".txt");
 			saveMatrix(Sk, "index/S"+k+".txt");
 		}
-//		Ak = U.times(S).times(V);
-//		System.out.print("Ak = ");
-//		Ak.print(getColumns(Ak)-1, 6);
-
-//		System.out.print("V"+k+" = ");
-//		Vk.print(getRows(Vk)-1, getColumns(Vk)-1);
 
 	}
 	
 	public static double[] transformQuery(double[] querySparse) {
 		Matrix q = new Matrix(querySparse, 1); //Create 1-d Matrix
-		return (q.times(Uk).times(Sk)).getArray()[0];
+		return (q.times(Uk).times(Sk)).getArray()[0]; //q.U*S
 	}
 	
 	public static DocSimilarity[] cosineSimilarity(double[] query) {
@@ -87,7 +60,6 @@ public class SVD {
 			//Calculate cosine similarity with doc i
 			double dotProduct = q.arrayTimes(doc).norm1();
 			double euclDist = q.normF() * doc.normF();
-//			similarity[i] = dotProduct/euclDist;
 			similarity[i] = new DocSimilarity(i, dotProduct/euclDist);
 		}
 		return similarity;

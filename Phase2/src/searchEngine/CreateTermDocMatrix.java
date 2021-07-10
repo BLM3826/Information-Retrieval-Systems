@@ -50,19 +50,9 @@ public class CreateTermDocMatrix {
 			Similarity similarity = new ClassicSimilarity();
 			
 			
-//			//---------------FROM INDEXER-----------------
-//			IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-//            iwc.setSimilarity(similarity);
-//            iwc.setOpenMode(OpenMode.CREATE);
-//            IndexWriter indexWriter = new IndexWriter(dir, iwc);
-			
-			
-			
 			//---------------FROM HERE--------------------
 
 			// create the index
-//			Directory index = new RAMDirectory();
-
 			IndexWriterConfig config = new IndexWriterConfig(analyzer);
 			config.setSimilarity(similarity);
             config.setOpenMode(OpenMode.CREATE);
@@ -83,29 +73,11 @@ public class CreateTermDocMatrix {
 			IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(indexLocation))); 
 			
 			double[][] termXDoc = getSparseTermXDoc(reader);
-//			for (int i = 0; i < termXDoc.length; ++i) {
-//				for (int j = 0; j < termXDoc[0].length; ++j) {
-//					System.out.print(termXDoc[i][j] + " ");
-//				}
-//				System.out.println(" ");
-//			}
 
 			int[] k = {50,100,150,300};
 			SVD.computeSVD(termXDoc, k);
 
 			//--------------------FOR SEARCHER-------------------
-//			double query[] = {0,0,0,0,0,1,0,0}; //Search for Lucene
-//			double query[] = { 1, 0, 0, 0, 0, 1, 0, 0 };
-//			query = SVD.transformQuery(query);
-//			for (double q : query) {
-//				System.out.print(q + " ");
-//			}
-//			System.out.println("\n");
-//
-//			double cos_sim[] = SVD.cosineSimilarity(query);
-//			for (int i = 0; i < cos_sim.length; ++i) {
-//				System.out.println("Doc" + i + " = " + cos_sim[i]);
-//			}
 
 			// searcher can only be closed when there
 			// is no need to access the documents any more.
@@ -115,13 +87,6 @@ public class CreateTermDocMatrix {
 		}
 	}
 
-//	private static void addDocWithTermVector(IndexWriter writer, String value, FieldType type) throws IOException {
-//		Document doc = new Document();
-//		// TextField title = new TextField("title", value, Field.Store.YES);
-//		Field field = new Field("title", value, type);
-//		doc.add(field); // this field has term Vector enabled.
-//		writer.addDocument(doc);
-//	}
 
 	private static void indexDoc(IndexWriter indexWriter, Doc mydoc, FieldType type) throws IOException {
 		// make a new, empty document
@@ -164,7 +129,6 @@ public class CreateTermDocMatrix {
 			for (ScoreDoc scoreDoc : indexSearcher.search(new MatchAllDocsQuery(), Integer.MAX_VALUE).scoreDocs) { // retrieves
 																													// all
 																													// documents
-//				System.out.println("DocID: " + scoreDoc.doc);
 				Terms docTerms = reader.getTermVector(scoreDoc.doc, "content");
 
 				Double[] vector = DocToDoubleVectorUtils.toSparseLocalFreqDoubleArray(docTerms, fieldTerms); // creates
@@ -177,12 +141,6 @@ public class CreateTermDocMatrix {
 				}
 				tempList.add(v);
 
-//				NumberFormat nf = new DecimalFormat("0.#");
-//				for (int i = 0; i <= vector.length - 1; i++) {
-//					System.out.print(nf.format(vector[i]) + " "); // prints document's vector
-//				}
-//				System.out.println();
-//				System.out.println();
 			}
 
 			double termXDoc[][] = new double[tempList.size()][];

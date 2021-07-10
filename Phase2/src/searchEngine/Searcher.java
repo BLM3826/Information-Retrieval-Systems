@@ -35,15 +35,13 @@ public class Searcher {
 
 			// Access the index using indexReaderFSDirectory.open(Paths.get(index))
 			IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexLocation)));
-//			IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-//			indexSearcher.setSimilarity(new ClassicSimilarity());
+
 			fieldTerms = MultiFields.getTerms(indexReader, "content");
 			System.out.println("Terms:" + fieldTerms.size());
 			terms = new HashMap<String, Integer>();
 			TermsEnum it = fieldTerms.iterator(); // iterates through the terms of the lexicon
 			int pos = 0;
 			while (it.next() != null) {
-//				System.out.println(it.term().utf8ToString() + " "); // prints the terms
 				terms.put(it.term().utf8ToString(), pos);
 				++pos;
 			}
@@ -117,16 +115,6 @@ public class Searcher {
 			Arrays.sort(cos_sim);
 			//1460
 			return Arrays.asList(cos_sim).subList(0, k + 1);
-
-			// create a query parser on the field "content"
-//			QueryParser parser = new QueryParser(field, analyzer);
-//			parser.setAllowLeadingWildcard(true);
-//
-//			Query query = parser.parse(QueryParser.escape(question));
-//			System.out.println("Searching for: " + query.toString(field));
-//			TopDocs results = indexSearcher.search(query, k);
-
-//			return cos_sim;
 
 		} catch (Exception e) {
 			e.printStackTrace();
