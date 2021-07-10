@@ -2,20 +2,17 @@ package searchEngine;
 
 // tested for lucene 7.7.2 and jdk13
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
+import org.apache.lucene.search.similarities.LMJelinekMercerSimilarity;
+import org.apache.lucene.search.similarities.MultiSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -48,7 +45,13 @@ public class Indexer {
             // define which analyzer to use for the normalization of documents
             Analyzer analyzer = new EnglishAnalyzer();
             // define retrieval model 
-            Similarity similarity = new ClassicSimilarity();
+            Similarity sim1 = new ClassicSimilarity();
+            Similarity sim2 = new BM25Similarity();
+            Similarity sim3 = new LMJelinekMercerSimilarity(0.7f);
+//            Similarity sim4 = new Similarity(); //WV possibly W2V...
+            Similarity[] sims = {sim1, sim2};
+            Similarity similarity = new MultiSimilarity(sims);
+            
             // configure IndexWriter
             IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
             iwc.setSimilarity(similarity);
@@ -66,16 +69,7 @@ public class Indexer {
                 indexDoc(indexWriter, doc);
             }
             
-            indexWriter.commit();
-
-            IndexReader reader = DirectoryReader.open(indexWriter);
-            String fieldName = "content";
-            FieldValuesSentenceIterator fieldValuesSentenceIterator = new FieldValuesSentenceIterator(reader, fieldName);
-
             indexWriter.close();
-            
-            Embeddings.createWord2Vec(fieldValuesSentenceIterator);
-            Embeddings.saveModel("index/embeddings.txt");
             
             Date end = new Date();
             System.out.println(end.getTime() - start.getTime() + " total milliseconds");
@@ -131,7 +125,7 @@ public class Indexer {
      */
     public static void main(String[] args) {
         try {
-            Indexer indexer = new Indexer();
+            new Indexer();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
