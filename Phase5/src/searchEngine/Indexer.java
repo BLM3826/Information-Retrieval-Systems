@@ -16,6 +16,8 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
+import org.apache.lucene.search.similarities.LMJelinekMercerSimilarity;
+import org.apache.lucene.search.similarities.MultiSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -48,10 +50,16 @@ public class Indexer {
             // define which analyzer to use for the normalization of documents
             Analyzer analyzer = new EnglishAnalyzer();
             // define retrieval model 
-            Similarity similarity = new ClassicSimilarity();
+            Similarity sim1 = new ClassicSimilarity();
+            Similarity sim2 = new BM25Similarity();
+            Similarity sim3 = new LMJelinekMercerSimilarity(0.7f);
+//            Similarity sim4 = new Similarity(); //WV possibly W2V...
+            Similarity[] sims = {sim1, sim2};
+            Similarity similarity = new MultiSimilarity(sims);
+            
             // configure IndexWriter
             IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-            iwc.setSimilarity(similarity);
+//            iwc.setSimilarity(similarity);
 
             // Create a new index in the directory, removing any
             // previously indexed documents:
