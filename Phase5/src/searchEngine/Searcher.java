@@ -60,7 +60,7 @@ public class Searcher {
 			Similarity sim1 = new ClassicSimilarity();
             Similarity sim2 = new BM25Similarity();
             Similarity sim3 = new LMJelinekMercerSimilarity(0.7f);
-            Similarity sim4 = new WordEmbeddingsSimilarity(Embeddings.embeddings, field, Smoothing.MEAN);
+//            Similarity sim4 = new WordEmbeddingsSimilarity(Embeddings.embeddings, field, Smoothing.MEAN);
             Similarity[] sims = {sim2, sim3};
             Similarity multi_similarity = new MultiSimilarity(sims);
 			indexSearcher.setSimilarity(multi_similarity);
