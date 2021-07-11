@@ -60,7 +60,7 @@ public class Searcher {
 			Similarity sim1 = new ClassicSimilarity();
             Similarity sim2 = new BM25Similarity();
             Similarity sim3 = new LMJelinekMercerSimilarity(0.7f);
-            Similarity sim4 = new WordEmbeddingsSimilarity(Embeddings.embeddings, field, Smoothing.MEAN); //WV possibly W2V...
+            Similarity sim4 = new WordEmbeddingsSimilarity(Embeddings.embeddings, field, Smoothing.MEAN);
             Similarity[] sims = {sim2, sim3};
             Similarity multi_similarity = new MultiSimilarity(sims);
 			indexSearcher.setSimilarity(multi_similarity);
@@ -87,21 +87,10 @@ public class Searcher {
 					ScoreDoc[] hits = results.scoreDocs;
 					System.out.println(hits.length);
 					for (ScoreDoc hit : hits) {
-						System.out.println(hit.doc);
 						Document hitdoc = indexSearcher.doc(hit.doc);
 						writer.write(q.getId() + " Q0 " + hitdoc.get("id") + " 0 " + hit.score + " STANDARD\n");
 						System.out.print(q.getId() + " Q0 " + hitdoc.get("id") + " 0 " + hit.score + " STANDARD\n");
 					}
-//					String[] terms = analyse(q.getQuery()); //split to tokens
-//					double[] query_vector = Embeddings.toDenseAverageVector(terms); //query collective vector
-//
-//					// Find documents with the most similarity
-//					List<DocSimilarity> similarity = search(query_vector, j);
-//					
-//					for (DocSimilarity hit : similarity) {
-//						writer.write(q.getId() + " Q0 " + hit.getId() + " 0 " + hit.getSimilarity() + " STANDARD\n");
-//						System.out.print(q.getId() + " Q0 " + hit.getId() + " 0 " + hit.getSimilarity() + " STANDARD\n");
-//					}
 				}
 				writer.close();
 			}
@@ -113,25 +102,6 @@ public class Searcher {
 		}
 	}
 	
-//	private String[] analyse(String question) {
-//		//Use EnglishAnalyser to transform query and extract text from lucene
-//		ArrayList<String> terms = new ArrayList<>();
-//		try {
-//			Analyzer analyzer = new EnglishAnalyzer();
-//			TokenStream stream = analyzer.tokenStream(null, question);
-//			CharTermAttribute charTermAttribute = stream.addAttribute(CharTermAttribute.class);
-//		
-//			stream.reset();
-//			while (stream.incrementToken()) {
-//			    terms.add(charTermAttribute.toString());
-//			}
-//			analyzer.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return terms.toArray(new String[terms.size()]);
-//	}
 
 	/**
 	 * Searches the index given a specific user query.
@@ -156,21 +126,7 @@ public class Searcher {
 			return null;
 		}
 	}
-//	private List<DocSimilarity> search(double[] query_vector, int k) {
-//		List<DocSimilarity> similarity = new ArrayList<>();
-//		
-//		for(Document doc : docs) {
-//			//Get tokens of doc in String[]
-//			String[] tokens = StringUtils.split(doc.getField(field).stringValue()," ");
-//			double[] document_vector = Embeddings.toDenseAverageVector(tokens); //document collective vector
-//			DocSimilarity sm = new DocSimilarity(Integer.parseInt(doc.getField("id").stringValue()), Embeddings.cosineSimilarity(document_vector, query_vector));
-//			similarity.add(sm);
-//		}
-//
-//		Collections.sort(similarity, new DocSimilarity.SimilarityComparator());
-//		similarity = similarity.subList(0, k); //keep only k numberOfDocs
-//		return similarity;
-//	}
+
 
 	/**
 	 * Initialize a Searcher
