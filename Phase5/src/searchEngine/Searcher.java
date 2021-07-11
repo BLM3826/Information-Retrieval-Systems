@@ -2,17 +2,11 @@ package searchEngine;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -28,13 +22,10 @@ import org.apache.lucene.search.similarities.MultiSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.FSDirectory;
 
-import searchEngine.WordEmbeddingsSimilarity.Smoothing;
-import txtparsing.DocSimilarity;
 import txtparsing.Question;
 import txtparsing.TXTParsing;
 
 public class Searcher {
-	private List<Document> docs;
 	String field = "content"; // define which field will be searched
 
 	public Searcher() {
@@ -45,17 +36,13 @@ public class Searcher {
 
 			// Access the index using indexReaderFSDirectory.open(Paths.get(index))
 			IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexLocation)));
-			
-			//Load Documents
-			docs = Reader.indexDocumentsList(indexReader);
-			
 			IndexSearcher indexSearcher = new IndexSearcher(indexReader);
 			
 			
 			//Load Embeddings
 //			String word2VecPath = "index/embeddings.txt";
-			String pretrainedModel = "index/pretrained/model.txt";
-			Embeddings.loadModel(pretrainedModel);
+//			String pretrainedModel = "index/pretrained/model.txt";
+//			Embeddings.loadModel(pretrainedModel);
 			
 			Similarity sim1 = new ClassicSimilarity();
             Similarity sim2 = new BM25Similarity();
